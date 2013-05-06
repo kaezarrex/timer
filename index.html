@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <style>
+          body {
+          background-color: white;
+          }
+      </style>
+  </head>
+    <body>
+        <script>
+            var duration = parseInt(window.location.hash.substr(1), 10)
+              , start = new Date();
+
+            var loop = function() {
+                var remaining = duration - (new Date() - start) / 1000
+
+                window.document.title = parseInt(remaining);
+
+                if (remaining <= 0) {
+                    showNotification()
+                } else {
+                    setTimeout(loop, 1000)
+                }
+            }
+
+            var showNotification = function() {
+
+                var notification = webkitNotifications.createNotification(
+                    'tea.png',
+                    'tea',
+                    duration
+                );
+
+                notification.show();
+            }
+
+            var link = document.createElement('link');
+            link.type = 'image/png';
+            link.rel = 'shortcut icon';
+            link.href = 'tea.png';
+            document.getElementsByTagName('head')[0].appendChild(link);
+
+            loop()
+        </script>
+    </body>
+</html>
