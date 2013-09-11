@@ -8,13 +8,43 @@
   </head>
     <body>
         <script>
-            var duration = parseInt(window.location.hash.substr(1), 10)
+            var parseArgs = function() {
+                var args = window.location.hash.substr(1).split(',')
+                  , duration = 60
+                  , description = 'default'
+                  , image = ''
+
+                if (args.length < 1 || args[0] == '') {
+                    window.location.hash = '#' + duration;
+                    parseArgs();
+                }
+
+                duration = parseInt(args[0], 10)
+
+                if (args.length > 1) {
+                    description = args[1]
+                }
+
+                if (args.length > 2) {
+                    image = args[2]
+                }
+
+                return {
+                    duration: duration,
+                    description: description,
+                    image: image
+                }
+            };
+
+            args = parseArgs();
+
+            var duration = args.duration
               , start = new Date();
 
             var loop = function() {
                 var remaining = duration - (new Date() - start) / 1000
 
-                window.document.title = parseInt(remaining);
+                window.document.title = '[' + parseInt(remaining) + '] ' + args.description
 
                 if (remaining <= 0) {
                     showNotification()
@@ -26,19 +56,19 @@
             var showNotification = function() {
 
                 var notification = webkitNotifications.createNotification(
-                    'tea.png',
-                    'tea',
+                    args.image,
+                    args.description,
                     duration
                 );
 
-                notification.show();
+                notification.show()
             }
 
-            var link = document.createElement('link');
-            link.type = 'image/png';
-            link.rel = 'shortcut icon';
-            link.href = 'tea.png';
-            document.getElementsByTagName('head')[0].appendChild(link);
+            var link = document.createElement('link')
+            link.type = 'image/png'
+            link.rel = 'shortcut icon'
+            link.href = args.image
+            document.getElementsByTagName('head')[0].appendChild(link)
 
             loop()
         </script>
