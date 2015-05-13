@@ -8,6 +8,12 @@
   </head>
     <body>
         <script>
+            Notification.requestPermission(function(status){
+                if (status === 'denied') {
+                    alert('Notifications are blocked on this site.');
+                }
+            })
+
             var parseArgs = function() {
                 var args = window.location.hash.substr(1).split(',')
                 return {
